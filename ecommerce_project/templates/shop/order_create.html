@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<div class="bg-white p-8 rounded-lg shadow-md max-w-2xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-8 text-center">Checkout</h1>
+
+    <div class="mb-8 border-b pb-6">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Your Order Summary</h2>
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for item in cart %}
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.product.name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.quantity }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${{ item.price }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">${{ item.total_price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="mt-4 flex justify-end items-center">
+            <span class="text-xl font-bold text-gray-800">Order Total: ${{ cart.get_total_price }}</span>
+        </div>
+    </div>
+
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Shipping Information</h2>
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray-700">First Name:</label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}<p class="text-red-500 text-xs mt-1">{{ form.first_name.errors }}</p>{% endif %}
+            </div>
+            <div>
+                <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-gray-700">Last Name:</label>
+                {{ form.last_name }}
+                {% if form.last_name.errors %}<p class="text-red-500 text-xs mt-1">{{ form.last_name.errors }}</p>{% endif %}
+            </div>
+        </div>
+        <div>
+            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">Email:</label>
+            {{ form.email }}
+            {% if form.email.errors %}<p class="text-red-500 text-xs mt-1">{{ form.email.errors }}</p>{% endif %}
+        </div>
+        <div>
+            <label for="{{ form.address.id_for_label }}" class="block text-sm font-medium text-gray-700">Address:</label>
+            {{ form.address }}
+            {% if form.address.errors %}<p class="text-red-500 text-xs mt-1">{{ form.address.errors }}</p>{% endif %}
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label for="{{ form.postal_code.id_for_label }}" class="block text-sm font-medium text-gray-700">Postal Code:</label>
+                {{ form.postal_code }}
+                {% if form.postal_code.errors %}<p class="text-red-500 text-xs mt-1">{{ form.postal_code.errors }}</p>{% endif %}
+            </div>
+            <div>
+                <label for="{{ form.city.id_for_label }}" class="block text-sm font-medium text-gray-700">City:</label>
+                {{ form.city }}
+                {% if form.city.errors %}<p class="text-red-500 text-xs mt-1">{{ form.city.errors }}</p>{% endif %}
+            </div>
+        </div>
+
+        <button type="submit" class="w-full bg-green-600 text-white px-6 py-3 rounded-md text-lg font-semibold hover:bg-green-700 transition-colors shadow-md">
+            Place Order
+        </button>
+    </form>
+</div>
+{% endblock %}

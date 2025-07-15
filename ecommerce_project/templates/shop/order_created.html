@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Order Placed!{% endblock %}
+
+{% block content %}
+<div class="bg-white p-8 rounded-lg shadow-md max-w-xl mx-auto text-center">
+    <h1 class="text-4xl font-bold text-green-600 mb-6">Order Placed Successfully!</h1>
+    <p class="text-lg text-gray-700 mb-4">Thank you for your purchase.</p>
+    <p class="text-lg text-gray-700 mb-6">Your order number is: <span class="font-bold text-blue-600">#{{ order.id }}</span></p>
+
+    <div class="border-t pt-6 mt-6">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Order Details</h2>
+        <div class="text-left space-y-2">
+            <p><strong>Name:</strong> {{ order.first_name }} {{ order.last_name }}</p>
+            <p><strong>Email:</strong> {{ order.email }}</p>
+            <p><strong>Address:</strong> {{ order.address }}, {{ order.postal_code }}, {{ order.city }}</p>
+            <p><strong>Order Date:</strong> {{ order.created|date:"M d, Y H:i" }}</p>
+            <p><strong>Total Amount:</strong> ${{ order.get_total_cost }}</p>
+        </div>
+
+        <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Items:</h3>
+        <ul class="list-disc list-inside text-left space-y-1">
+            {% for item in order.items.all %}
+                <li>{{ item.product.name }} (x{{ item.quantity }}) - ${{ item.get_cost }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="mt-8">
+        <a href="{% url 'shop:product_list' %}" class="inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+            Continue Shopping
+        </a>
+    </div>
+</div>
+{% endblock %}

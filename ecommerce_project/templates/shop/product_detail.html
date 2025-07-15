@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="bg-white p-8 rounded-lg shadow-md flex flex-col lg:flex-row gap-8">
+    <!-- Product Image -->
+    <div class="w-full lg:w-1/2 flex justify-center items-center">
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-lg">
+        {% else %}
+            <img src="https://placehold.co/600x400/e0e0e0/333333?text=No+Image" alt="No Image" class="max-w-full h-auto rounded-lg shadow-lg">
+        {% endif %}
+    </div>
+
+    <!-- Product Details -->
+    <div class="w-full lg:w-1/2">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ product.name }}</h1>
+        <p class="text-blue-600 text-lg font-semibold mb-2">
+            <a href="{{ product.category.get_absolute_url }}" class="hover:underline">{{ product.category }}</a>
+        </p>
+        <p class="text-3xl font-extrabold text-gray-900 mb-6">${{ product.price }}</p>
+
+        <p class="text-gray-700 leading-relaxed mb-6">{{ product.description|linebreaksbr }}</p>
+
+        {% if product.available %}
+            <form action="{% url 'shop:cart_add' product.id %}" method="post" class="space-y-4">
+                {% csrf_token %}
+                <div>
+                    <label for="{{ cart_product_form.quantity.id_for_label }}" class="block text-sm font-medium text-gray-700">Quantity:</label>
+                    {{ cart_product_form.quantity }}
+                </div>
+                {{ cart_product_form.update }} <!-- Hidden field -->
+                <button type="submit" class="w-full bg-blue-600 text-white px-6 py-3 rounded-md text-lg font-semibold hover:bg-blue-700 transition-colors shadow-md">
+                    Add to cart
+                </button>
+            </form>
+        {% else %}
+            <p class="text-red-600 text-xl font-bold">Out of Stock</p>
+        {% endif %}
+
+        <div class="mt-8 text-gray-600 text-sm">
+            <p>Created: {{ product.created|date:"M d, Y" }}</p>
+            <p>Last Updated: {{ product.updated|date:"M d, Y" }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
